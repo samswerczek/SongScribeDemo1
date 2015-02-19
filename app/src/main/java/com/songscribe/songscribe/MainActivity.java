@@ -11,31 +11,76 @@ import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
-    MediaPlayer player;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button1=(Button)findViewById(R.id.button1);
+
+        Button play_button=(Button)findViewById(R.id.button1);
+        Button chords_button=(Button)findViewById(R.id.button3);
+        Button leads_button=(Button)findViewById(R.id.button5);
+        Button drums_button=(Button)findViewById(R.id.button4);
         Button button2=(Button)findViewById(R.id.button2);
-        button1.setOnClickListener(new View.OnClickListener() {
+
+        final MediaPlayer chord_player = MediaPlayer.create(MainActivity.this, R.raw.ssad);
+        final MediaPlayer drum_player = MediaPlayer.create(MainActivity.this, R.raw.lovebinds);
+        final MediaPlayer lead_player = MediaPlayer.create(MainActivity.this, R.raw.lovebinds);
+
+
+        play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                player=MediaPlayer.create(MainActivity.this,R.raw.ssad);
 
-                player.start();
+                chord_player.seekTo(0);
+                drum_player.seekTo(0);
+                lead_player.seekTo(0);
 
+                drum_player.start();
+                chord_player.start();
+                lead_player.start();
             }
         });
+
+        chords_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chord_player.seekTo(0);
+                chord_player.start();
+            }
+        });
+
+        drums_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drum_player.seekTo(0);
+                drum_player.start();
+            }
+        });
+
+        leads_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lead_player.seekTo(0);
+                lead_player.start();
+            }
+        });
+
+
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                player.pause();
+
+                chord_player.pause();
+                drum_player.pause();
+                lead_player.pause();
+
 
             }
 
         });
+
 
     }
 
