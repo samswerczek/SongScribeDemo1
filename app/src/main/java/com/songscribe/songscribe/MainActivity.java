@@ -26,7 +26,7 @@ public class MainActivity extends ActionBarActivity {
 
         final MediaPlayer chord_player = MediaPlayer.create(MainActivity.this, R.raw.ssad);
         final MediaPlayer drum_player = MediaPlayer.create(MainActivity.this, R.raw.lovebinds);
-        final MediaPlayer lead_player = MediaPlayer.create(MainActivity.this, R.raw.lovebinds);
+        final MediaPlayer lead_player = MediaPlayer.create(MainActivity.this, R.raw.fly);
 
 
         play_button.setOnClickListener(new View.OnClickListener() {
