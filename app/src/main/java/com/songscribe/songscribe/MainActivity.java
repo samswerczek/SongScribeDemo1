@@ -10,7 +10,7 @@ import android.widget.Button;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    private static boolean isPlaying = false;
 
 
     @Override
@@ -18,11 +18,11 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button play_button=(Button)findViewById(R.id.button1);
+        final Button play_button=(Button)findViewById(R.id.button1);
         Button chords_button=(Button)findViewById(R.id.button3);
         Button leads_button=(Button)findViewById(R.id.button5);
         Button drums_button=(Button)findViewById(R.id.button4);
-        Button button2=(Button)findViewById(R.id.button2);
+        Button stop=(Button)findViewById(R.id.button2);
 
         final MediaPlayer chord_player = MediaPlayer.create(MainActivity.this, R.raw.ssad);
         final MediaPlayer drum_player = MediaPlayer.create(MainActivity.this, R.raw.lovebinds);
@@ -33,13 +33,22 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                chord_player.seekTo(0);
-                drum_player.seekTo(0);
-                lead_player.seekTo(0);
+                if(isPlaying){
+                    if(drum_player.isPlaying())drum_player.pause();
+                    if(chord_player.isPlaying()) chord_player.pause();
+                    if(lead_player.isPlaying())lead_player.pause();
+                    isPlaying=false;
+                    play_button.setText("Play");
+                }else{
+                    isPlaying=true;
+                    play_button.setText("Pause");
+                    if(!drum_player.isPlaying())drum_player.start();
+                    if(!chord_player.isPlaying()) chord_player.start();
+                    if(!lead_player.isPlaying())lead_player.start();
+                }
 
-                drum_player.start();
-                chord_player.start();
-                lead_player.start();
+
+
             }
         });
 
@@ -68,13 +77,18 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        button2.setOnClickListener(new View.OnClickListener() {
+        stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                chord_player.pause();
-                drum_player.pause();
-                lead_player.pause();
+                if(drum_player.isPlaying())drum_player.pause();
+                if(chord_player.isPlaying()) chord_player.pause();
+                if(lead_player.isPlaying())lead_player.pause();
+                drum_player.seekTo(0);
+                chord_player.seekTo(0);
+                lead_player.seekTo(0);
+                isPlaying=false;
+                play_button.setText("Play");
 
 
             }
