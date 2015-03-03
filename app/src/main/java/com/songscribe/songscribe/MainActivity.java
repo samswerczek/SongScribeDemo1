@@ -12,6 +12,7 @@ import android.widget.Button;
 public class MainActivity extends ActionBarActivity {
     private static boolean isPlaying = false;
     private static boolean loopSong = false;
+    SongThread song = new SongThread();
 
 
     @Override
@@ -50,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
 
                     if(!chord_player.isPlaying())chord_player.start();
 
-                    if(!lead_player.isPlaying())lead_player.start();
+                   // if(!lead_player.isPlaying())lead_player.start();
 
                     loopSong = true;
                     //loopCheck();
@@ -65,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //chord_player.seekTo(0);
-                if(chord_player.isPlaying()) chord_player.pause();
+                if(chord_player.isPlaying()) chord_player.stop();
                 else chord_player.start();
 
             }
@@ -75,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //drum_player.seekTo(0);
-                if(drum_player.isPlaying()) drum_player.pause();
+                if(drum_player.isPlaying()) drum_player.stop();
                 else drum_player.start();
             }
         });
@@ -84,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //lead_player.seekTo(0);
-                if(lead_player.isPlaying()) lead_player.pause();
+                if(lead_player.isPlaying()) lead_player.stop();
                 else lead_player.start();
             }
         });
@@ -113,8 +114,17 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public class SongThread extends Thread {
 
+        public void run() {
+            if (loopSong){
 
+            }else{
+
+            }
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
