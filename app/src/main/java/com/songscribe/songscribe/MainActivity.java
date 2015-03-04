@@ -14,11 +14,17 @@ public class MainActivity extends ActionBarActivity {
     private static boolean loopSong = false;
     SongThread song = new SongThread();
 
+    int[] sounds = {R.raw.fly, R.raw.ssad, R.raw.lovebinds};
+    SoundManager sm = new SoundManager(this, sounds.length);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        int[] sounds = {R.raw.fly, R.raw.ssad, R.raw.lovebinds};
+
+        for(int s: sounds)  sm.addSound(0, s);
 
         final Button play_button=(Button)findViewById(R.id.button1);
         final Button chords_button=(Button)findViewById(R.id.button3);
@@ -49,9 +55,11 @@ public class MainActivity extends ActionBarActivity {
                     play_button.setText("Pause");
                     if(!drum_player.isPlaying())drum_player.start();
 
+                    if(!lead_player.isPlaying())lead_player.start();
+
+
                     if(!chord_player.isPlaying())chord_player.start();
 
-                   // if(!lead_player.isPlaying())lead_player.start();
 
                     loopSong = true;
                     //loopCheck();
