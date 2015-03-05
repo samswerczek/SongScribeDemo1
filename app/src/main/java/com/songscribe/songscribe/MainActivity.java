@@ -17,12 +17,12 @@ public class MainActivity extends ActionBarActivity {
     private static boolean loopSong = false;
     SongThread song = new SongThread();
 
-    //int[] soundsBass = {R.raw.bass1, R.raw.bass2, R.raw.bass3};
+    int[] soundsBass = {R.raw.song3, R.raw.drums5, R.raw.fly};
     int[] soundsDrums = {R.raw.drums1,R.raw.drums2,R.raw.drums3};
-   // int[] soundsSong = {R.raw.song1, R.raw.song2, R.raw.song3};
-    int[] soundsBass = soundsDrums;
+    int[] soundsSong = {R.raw.lovebinds, R.raw.ssad, R.raw.song3};
+   // int[] soundsBass = soundsDrums;
 
-    int[] soundsSong = soundsBass;
+    //int[] soundsSong = soundsBass;
 
     int indexBass = 0;
     int indexDrums = 0;
@@ -33,12 +33,24 @@ public class MainActivity extends ActionBarActivity {
     int lengthSong = 3;
     int lengthUser = 3;
 
+    int idBass = -1;
+    int idDrums = -1;
+    int idSong = -1;
+
+    int test1,test2,test3;
+
+
+    int[] listBass = new int[3];
+    int[] listDrums = new int [3];
+    int[] listSong = new int [3];
+
+    /*
     SoundManager smBass;
     SoundManager smDrums;
     SoundManager smSong;
     SoundManager smUser;
     SoundManager sm;
-
+*/
     SoundPool p;
 
     int testthing;
@@ -50,10 +62,27 @@ public class MainActivity extends ActionBarActivity {
 
         final Context test = this;
 
-        sm = new SoundManager(this, 1);
+        //sm = new SoundManager(this, 1);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) p = new SoundPool.Builder().setMaxStreams(10).build();
         else p = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        smBass = new SoundManager(this, lengthBass);
+
+        listBass[0] = loadSound(R.raw.song3);
+        listBass[1] = loadSound(R.raw.drums5);
+        listBass[2] = loadSound(R.raw.fly);
+
+        listDrums[0] = loadSound(R.raw.drums1);
+        listDrums[1] = loadSound(soundsDrums[1]);
+        listDrums[2] = loadSound(soundsDrums[2]);
+
+        listSong[0] = loadSound(soundsSong[0]);
+        listSong[1] = loadSound(soundsSong[1]);
+        listSong[2] = loadSound(soundsSong[2]);
+        
+        test1 = p.load(this,R.raw.drums1,1);
+        test2 = p.load(this,R.raw.drums2,1);
+        test3 = p.load(this,R.raw.drums3,1);
+
+        /*smBass = new SoundManager(this, lengthBass);
         smDrums = new SoundManager(this, lengthDrums);
         smSong = new SoundManager(this, lengthSong);
 
@@ -64,6 +93,7 @@ public class MainActivity extends ActionBarActivity {
         for(int s: soundsBass)  smBass.addSound(0, s);
         for(int s: soundsDrums)  smDrums.addSound(0, s);
         for(int s: soundsSong)  smSong.addSound(0, s);
+        */
 /*
 
         smBass.addSound(0, R.raw.drums1);
@@ -94,9 +124,12 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 
-                smBass.playSound(indexBass);
-                smDrums.playSound(indexDrums);
-                smSong.playSound(indexSong);
+                //smBass.playSound(indexBass);
+                //smDrums.playSound(indexDrums);
+                //smSong.playSound(indexSong);
+
+
+                playUserSong();
 
                 if (isPlaying) {
                     /*
@@ -130,14 +163,15 @@ public class MainActivity extends ActionBarActivity {
         btnBass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(indexBass >= smBass.getSize())indexBass=0;
+                if(indexBass >= soundsBass.length-1)indexBass=0;
                 else indexBass++;
+
+                stopAll();
                 //smBass.initSound(indexBass);
-                smBass.playSound(indexBass);
+                //idBass = loadSound(soundsBass[indexBass]);
 
+                playSound(test1);
 
-                sm.addSound(0, R.raw.fly);
-                sm.playSound(0);
                 //chord_player.seekTo(0);
                 /*
                 if(chord_player.isPlaying()) chord_player.stop();
@@ -150,10 +184,15 @@ public class MainActivity extends ActionBarActivity {
         btnSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(indexSong >= smSong.getSize())indexSong=0;
+                if(indexSong >= soundsSong.length-1)indexSong=0;
                 else indexSong++;
+
+                stopAll();
                // smSong.initSound(indexSong);
-                smSong.playSound(indexSong);
+
+                //idSong = loadSound(soundsSong[indexSong]);
+                playSound(test2);
+
                 //drum_player.seekTo(0);
                 /*
                 if(drum_player.isPlaying()) drum_player.stop();
@@ -165,10 +204,14 @@ public class MainActivity extends ActionBarActivity {
         btnDrums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(indexDrums >= smDrums.getSize())indexDrums=0;
+                if(indexDrums >= soundsDrums.length-1)indexDrums=0;
                 else indexDrums++;
+
+                stopAll();
+
                // smDrums.initSound(indexDrums);
-                smDrums.playSound(indexDrums);
+                //idDrums = loadSound(soundsDrums[indexDrums]);
+                playSound(test3);
                 //lead_player.seekTo(0);
                 /*
                 if(lead_player.isPlaying()) lead_player.stop();
@@ -193,7 +236,8 @@ public class MainActivity extends ActionBarActivity {
 
                 btnPlay.setText("Play");
                 loopSong = false;
-                playSound();
+                stopAll();
+
 
             }
 
@@ -203,7 +247,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void playSound(int rawSound){
-        p.play(loadSound(rawSound),1,1,1,0,1);
+        p.play(rawSound, 1, 1, 1, 0, 1);
     }
     public int loadSound(int rawSound){
         return p.load(this,rawSound ,1);
@@ -211,6 +255,36 @@ public class MainActivity extends ActionBarActivity {
     public void stopSound(int rawSound){
         p.stop(rawSound);
     }
+
+    public void stopAll(){
+        for(int s: soundsBass)  stopSound(s);
+        for(int s: soundsDrums)  stopSound(s);
+        for(int s: soundsSong)  stopSound(s);
+
+        p.stop(test1);
+        p.stop(test2);
+        p.stop(test3);
+    }
+
+
+
+
+    public void playUserSong(){
+
+        /*
+        if(idDrums < 0)  idDrums = loadSound(soundsDrums[0]);
+        if(idSong < 0)  idSong = loadSound(soundsSong[0]);
+        if(idBass < 0)  idBass = loadSound(soundsBass[0]);
+
+        playSound(listDrums[indexDrums]);
+        playSound(listBass[indexBass]);
+        playSound(listSong[indexSong]);
+        */
+        p.play(test1, 1, 1, 1, 0, 1);
+        p.play(test2, 1, 1, 1, 0, 1);
+        p.play(test3, 1, 1, 1, 0, 1);
+    }
+
 
     public class SongThread extends Thread {
 
