@@ -1,7 +1,9 @@
 package com.songscribe.songscribe;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -37,6 +39,8 @@ public class MainActivity extends ActionBarActivity {
     SoundManager smUser;
     SoundManager sm;
 
+    SoundPool p;
+
     int testthing;
 
     @Override
@@ -47,7 +51,8 @@ public class MainActivity extends ActionBarActivity {
         final Context test = this;
 
         sm = new SoundManager(this, 1);
-
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) p = new SoundPool.Builder().setMaxStreams(10).build();
+        else p = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
         smBass = new SoundManager(this, lengthBass);
         smDrums = new SoundManager(this, lengthDrums);
         smSong = new SoundManager(this, lengthSong);
@@ -103,10 +108,8 @@ public class MainActivity extends ActionBarActivity {
                     btnPlay.setText("Play");
                     loopSong = false;
                 } else {
-
                     isPlaying = true;
                     btnPlay.setText("Pause");
-
                     /*
                     if(!drum_player.isPlaying())drum_player.start();
 
@@ -190,13 +193,23 @@ public class MainActivity extends ActionBarActivity {
 
                 btnPlay.setText("Play");
                 loopSong = false;
-
+                playSound();
 
             }
 
         });
 
 
+    }
+
+    public void playSound(int rawSound){
+        p.play(loadSound(rawSound),1,1,1,0,1);
+    }
+    public int loadSound(int rawSound){
+        return p.load(this,rawSound ,1);
+    }
+    public void stopSound(int rawSound){
+        p.stop(rawSound);
     }
 
     public class SongThread extends Thread {
