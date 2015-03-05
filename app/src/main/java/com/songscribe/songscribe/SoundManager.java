@@ -12,6 +12,7 @@ public class SoundManager {
     private  HashMap<Integer, Integer> mSoundPoolMap;
     private AudioManager mAudioManager;
     private Context mContext;
+    private int size = -1;
 
     public SoundManager(Context theContext, int sounds) {
         mContext = theContext;
@@ -21,6 +22,7 @@ public class SoundManager {
     }
 
     public void addSound(int index, int SoundID) {
+        size++;
         mSoundPoolMap.put(index, mSoundPool.load(mContext, SoundID, 1));
     }
 
@@ -36,5 +38,9 @@ public class SoundManager {
         streamVolume = streamVolume / mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
         mSoundPool.play((Integer) mSoundPoolMap.get(index), streamVolume, streamVolume, 1, -1, 1f);
+    }
+
+    public int getSize(){
+        return size;
     }
 }

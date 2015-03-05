@@ -13,27 +13,35 @@ public class MainActivity extends ActionBarActivity {
     private static boolean loopSong = false;
     SongThread song = new SongThread();
 
-    int[] sounds = {R.raw.fly, R.raw.ssad, R.raw.lovebinds};
-    SoundManager bass = new SoundManager(this, sounds.length);
+    int[] soundsBass = {R.raw.bass1, R.raw.bass2, R.raw.bass3};
+    int[] soundsDrums = {R.raw.drums1,R.raw.drums2,R.raw.drums3};
+    int[] soundsSong = {R.raw.song1, R.raw.song2, R.raw.song3};
+
+    int indexBass = 0;
+    int indexDrums = 0;
+    int indexSong = 0;
+
+    SoundManager smBass = new SoundManager(this, soundsBass.length);
+    SoundManager smDrums = new SoundManager(this, soundsDrums.length);
+    SoundManager smSong = new SoundManager(this, soundsSong.length);
+
+    SoundManager smUser = new SoundManager(this, soundsSong.length);
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        int[] soundsBass = {R.raw.bass1, R.raw.bass2, R.raw.bass3};
-        int[] soundsDrums = {R.raw.drums1,R.raw.drums2,R.raw.drums3};
-        int[] soundsSong = {R.raw.song1, R.raw.song2, R.raw.song3};
 
-        for(int s: soundsBass)  bass.addSound(0, s);
-        for(int s: soundsDrums)  bass.addSound(0, s);
-        for(int s: soundsSong)  bass.addSound(0, s);
+        for(int s: soundsBass)  smBass.addSound(0, s);
+        for(int s: soundsDrums)  smDrums.addSound(0, s);
+        for(int s: soundsSong)  smSong.addSound(0, s);
 
-        final Button play_button=(Button)findViewById(R.id.button1);
-        final Button chords_button=(Button)findViewById(R.id.button3);
-        final Button leads_button=(Button)findViewById(R.id.button5);
-        final Button drums_button=(Button)findViewById(R.id.button4);
-        final Button stop=(Button)findViewById(R.id.button2);
+        final Button btnPlay=(Button)findViewById(R.id.button1);
+        final Button btnBass=(Button)findViewById(R.id.button3);
+        final Button btnDrums=(Button)findViewById(R.id.button5);
+        final Button btnSong=(Button)findViewById(R.id.button4);
+        final Button btnStop=(Button)findViewById(R.id.button2);
 /*
         final MediaPlayer chord_player = MediaPlayer.create(MainActivity.this, R.raw.ssad);
         final MediaPlayer drum_player = MediaPlayer.create(MainActivity.this, R.raw.lovebinds);
@@ -41,23 +49,27 @@ public class MainActivity extends ActionBarActivity {
 
 */
 
-        play_button.setOnClickListener(new View.OnClickListener() {
+        btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(isPlaying){
+                smBass.playSound(indexBass);
+                smDrums.playSound(indexDrums);
+                smSong.playSound(indexSong);
+
+                if (isPlaying) {
                     /*
                     if(drum_player.isPlaying())drum_player.pause();
                     if(chord_player.isPlaying()) chord_player.pause();
                     if(lead_player.isPlaying())lead_player.pause();
                     */
-                    isPlaying=false;
-                    play_button.setText("Play");
+                    isPlaying = false;
+                    btnPlay.setText("Play");
                     loopSong = false;
-                }else{
+                } else {
 
-                    isPlaying=true;
-                    play_button.setText("Pause");
+                    isPlaying = true;
+                    btnPlay.setText("Pause");
 
                     /*
                     if(!drum_player.isPlaying())drum_player.start();
@@ -73,13 +85,15 @@ public class MainActivity extends ActionBarActivity {
                 }
 
 
-
             }
         });
 
-        chords_button.setOnClickListener(new View.OnClickListener() {
+        btnBass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(indexBass == smBass.getSize())indexBass=0;
+                else indexBass++;
+                smBass.playSound(indexBass);
                 //chord_player.seekTo(0);
                 /*
                 if(chord_player.isPlaying()) chord_player.stop();
@@ -89,9 +103,12 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        drums_button.setOnClickListener(new View.OnClickListener() {
+        btnSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(indexSong == smSong.getSize())indexSong=0;
+                else indexSong++;
+                smSong.playSound(indexSong);
                 //drum_player.seekTo(0);
                 /*
                 if(drum_player.isPlaying()) drum_player.stop();
@@ -100,9 +117,12 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        leads_button.setOnClickListener(new View.OnClickListener() {
+        btnDrums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(indexDrums == smDrums.getSize())indexDrums=0;
+                else indexDrums++;
+                smDrums.playSound(indexDrums);
                 //lead_player.seekTo(0);
                 /*
                 if(lead_player.isPlaying()) lead_player.stop();
@@ -112,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        stop.setOnClickListener(new View.OnClickListener() {
+        btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 /*
@@ -123,9 +143,9 @@ public class MainActivity extends ActionBarActivity {
                 chord_player.seekTo(0);
                 lead_player.seekTo(0);
                 */
-                isPlaying=false;
+                isPlaying = false;
 
-                play_button.setText("Play");
+                btnPlay.setText("Play");
                 loopSong = false;
 
 
