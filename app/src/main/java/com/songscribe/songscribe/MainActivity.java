@@ -12,17 +12,20 @@ import android.view.View;
 import android.widget.Button;
 
 
+
 public class MainActivity extends ActionBarActivity {
     private static boolean isPlaying = false;
     private static boolean loopSong = false;
     SongThread song = new SongThread();
 
-    int[] soundsBass = {R.raw.song3, R.raw.drums5, R.raw.fly};
+    int[] soundsBass = {R.raw.guitar1, R.raw.guitar2, R.raw.guitar3};
     int[] soundsDrums = {R.raw.drums1,R.raw.drums2,R.raw.drums3};
-    int[] soundsSong = {R.raw.lovebinds, R.raw.ssad, R.raw.song3};
+    int[] soundsSong = {R.raw.song3, R.raw.song3, R.raw.song3};
    // int[] soundsBass = soundsDrums;
 
     //int[] soundsSong = soundsBass;
+
+    int[] playing = new int[3];
 
     int indexBass = 0;
     int indexDrums = 0;
@@ -53,8 +56,6 @@ public class MainActivity extends ActionBarActivity {
 */
     SoundPool p;
 
-    int testthing;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
         listSong[0] = loadSound(soundsSong[0]);
         listSong[1] = loadSound(soundsSong[1]);
         listSong[2] = loadSound(soundsSong[2]);
-        
+
         test1 = p.load(this,R.raw.drums1,1);
         test2 = p.load(this,R.raw.drums2,1);
         test3 = p.load(this,R.raw.drums3,1);
@@ -129,29 +130,17 @@ public class MainActivity extends ActionBarActivity {
                 //smSong.playSound(indexSong);
 
 
-                playUserSong();
+
 
                 if (isPlaying) {
-                    /*
-                    if(drum_player.isPlaying())drum_player.pause();
-                    if(chord_player.isPlaying()) chord_player.pause();
-                    if(lead_player.isPlaying())lead_player.pause();
-                    */
                     isPlaying = false;
                     btnPlay.setText("Play");
+                    pauseUserSong();
                     loopSong = false;
                 } else {
                     isPlaying = true;
                     btnPlay.setText("Pause");
-                    /*
-                    if(!drum_player.isPlaying())drum_player.start();
-
-                    if(!lead_player.isPlaying())lead_player.start();
-
-
-                    if(!chord_player.isPlaying())chord_player.start();
-
-*/
+                    playUserSong();
                     loopSong = true;
                     //loopCheck();
                 }
@@ -239,6 +228,7 @@ public class MainActivity extends ActionBarActivity {
                 stopAll();
 
 
+
             }
 
         });
@@ -246,24 +236,18 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    public void playSound(int rawSound){
-        p.play(rawSound, 1, 1, 1, 0, 1);
+    public void playSound(int loadedSound){
+        playing[0] = p.play(loadedSound, 1, 1, 1, 0, 1);
     }
     public int loadSound(int rawSound){
-        return p.load(this,rawSound ,1);
+        return p.load(this,rawSound,1);
     }
-    public void stopSound(int rawSound){
-        p.stop(rawSound);
+    public void stopSound(int playingSound){
+        p.stop(playingSound);
     }
 
     public void stopAll(){
-        for(int s: soundsBass)  stopSound(s);
-        for(int s: soundsDrums)  stopSound(s);
-        for(int s: soundsSong)  stopSound(s);
-
-        p.stop(test1);
-        p.stop(test2);
-        p.stop(test3);
+        for(int s: playing)  stopSound(s);
     }
 
 
@@ -271,18 +255,17 @@ public class MainActivity extends ActionBarActivity {
 
     public void playUserSong(){
 
-        /*
-        if(idDrums < 0)  idDrums = loadSound(soundsDrums[0]);
-        if(idSong < 0)  idSong = loadSound(soundsSong[0]);
-        if(idBass < 0)  idBass = loadSound(soundsBass[0]);
+        playing[0] = p.play(test1, 1, 1, 1, 0, 1);
+        playing[1] = p.play(test2, 1, 1, 1, 0, 1);
+        playing[2] = p.play(test3, 1, 1, 1, 0, 1);
+    }
+    public void pauseUserSong(){
 
-        playSound(listDrums[indexDrums]);
-        playSound(listBass[indexBass]);
-        playSound(listSong[indexSong]);
-        */
-        p.play(test1, 1, 1, 1, 0, 1);
-        p.play(test2, 1, 1, 1, 0, 1);
-        p.play(test3, 1, 1, 1, 0, 1);
+
+
+        p.pause(playing[0]);
+        p.pause(playing[1]);
+        p.pause(playing[2]);
     }
 
 
