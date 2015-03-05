@@ -1,5 +1,7 @@
 package com.songscribe.songscribe;
 
+import android.content.Context;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -13,30 +15,64 @@ public class MainActivity extends ActionBarActivity {
     private static boolean loopSong = false;
     SongThread song = new SongThread();
 
-    int[] soundsBass = {R.raw.bass1, R.raw.bass2, R.raw.bass3};
+    //int[] soundsBass = {R.raw.bass1, R.raw.bass2, R.raw.bass3};
     int[] soundsDrums = {R.raw.drums1,R.raw.drums2,R.raw.drums3};
-    int[] soundsSong = {R.raw.song1, R.raw.song2, R.raw.song3};
+   // int[] soundsSong = {R.raw.song1, R.raw.song2, R.raw.song3};
+    int[] soundsBass = soundsDrums;
+
+    int[] soundsSong = soundsBass;
 
     int indexBass = 0;
     int indexDrums = 0;
     int indexSong = 0;
 
-    SoundManager smBass = new SoundManager(this, soundsBass.length);
-    SoundManager smDrums = new SoundManager(this, soundsDrums.length);
-    SoundManager smSong = new SoundManager(this, soundsSong.length);
+    int lengthBass = 3;
+    int lengthDrums = 3;
+    int lengthSong = 3;
+    int lengthUser = 3;
 
-    SoundManager smUser = new SoundManager(this, soundsSong.length);
+    SoundManager smBass;
+    SoundManager smDrums;
+    SoundManager smSong;
+    SoundManager smUser;
+    SoundManager sm;
 
+    int testthing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final Context test = this;
+
+        sm = new SoundManager(this, 1);
+
+        smBass = new SoundManager(this, lengthBass);
+        smDrums = new SoundManager(this, lengthDrums);
+        smSong = new SoundManager(this, lengthSong);
+
+        smUser = new SoundManager(this, lengthUser);
+
+        testthing = smDrums.initSound(this, R.raw.drums1);
+
         for(int s: soundsBass)  smBass.addSound(0, s);
         for(int s: soundsDrums)  smDrums.addSound(0, s);
         for(int s: soundsSong)  smSong.addSound(0, s);
+/*
 
+        smBass.addSound(0, R.raw.drums1);
+        smBass.addSound(1, R.raw.drums2);
+        smBass.addSound(2, R.raw.drums3);
+
+        smSong.addSound(0, R.raw.drums1);
+        smSong.addSound(1, R.raw.drums2);
+        smSong.addSound(2, R.raw.drums3);
+
+        smDrums.addSound(0, R.raw.drums1);
+        smDrums.addSound(1, R.raw.drums2);
+        smDrums.addSound(2, R.raw.drums3);
+*/
         final Button btnPlay=(Button)findViewById(R.id.button1);
         final Button btnBass=(Button)findViewById(R.id.button3);
         final Button btnDrums=(Button)findViewById(R.id.button5);
@@ -91,9 +127,14 @@ public class MainActivity extends ActionBarActivity {
         btnBass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(indexBass == smBass.getSize())indexBass=0;
+                if(indexBass >= smBass.getSize())indexBass=0;
                 else indexBass++;
+                //smBass.initSound(indexBass);
                 smBass.playSound(indexBass);
+
+
+                sm.addSound(0, R.raw.fly);
+                sm.playSound(0);
                 //chord_player.seekTo(0);
                 /*
                 if(chord_player.isPlaying()) chord_player.stop();
@@ -106,8 +147,9 @@ public class MainActivity extends ActionBarActivity {
         btnSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(indexSong == smSong.getSize())indexSong=0;
+                if(indexSong >= smSong.getSize())indexSong=0;
                 else indexSong++;
+               // smSong.initSound(indexSong);
                 smSong.playSound(indexSong);
                 //drum_player.seekTo(0);
                 /*
@@ -120,8 +162,9 @@ public class MainActivity extends ActionBarActivity {
         btnDrums.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(indexDrums == smDrums.getSize())indexDrums=0;
+                if(indexDrums >= smDrums.getSize())indexDrums=0;
                 else indexDrums++;
+               // smDrums.initSound(indexDrums);
                 smDrums.playSound(indexDrums);
                 //lead_player.seekTo(0);
                 /*
